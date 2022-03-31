@@ -6,6 +6,7 @@ const { register, login, userProfile}
     = require('../controllers/userController')
 
 //const {validateUser, validatePost} = require('../middleware/main')
+//reikes 
 
 router.post('/register', register)
 router.post('/login', login)
