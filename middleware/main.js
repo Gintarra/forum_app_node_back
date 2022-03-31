@@ -14,7 +14,8 @@ module.exports = {
         }  else {
             next()
         }
-    }, validateLogin: async (req, res, next) => {
+    }, 
+    validateLogin: async (req, res, next) => {
         const { username, password } = req.body
         const userExist = await usersDb.findOne({ username: username })
         if (!userExist) {
@@ -27,6 +28,14 @@ module.exports = {
         const { newImage} = req.body
         if (newImage.length < 5 || newImage.length > 400) {
             res.send({success: false, message: "Netinkamas url." })
+        } else {
+            next()
+        }
+    },
+    validateTopic: async (req, res, next) => {
+        const { newTopic} = req.body
+        if (newTopic.length < 5 || newTopic.length > 50) {
+            res.send({success: false, message: "Netinkamas pavadinimas, ilgis turi būti 5-50 simbolių." })
         } else {
             next()
         }
