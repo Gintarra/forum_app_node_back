@@ -2,15 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 
-const { register, login, userProfile}
+const { register, login, changeImage}
     = require('../controllers/userController')
 
-//const {validateUser, validatePost} = require('../middleware/main')
-//reikes 
+const {validateRegister, validateLogin, validateImage} = require('../middleware/main')
 
-router.post('/register', register)
-router.post('/login', login)
-router.get('/profile', userProfile)
+
+router.post('/register', validateRegister, register)
+router.post('/login', validateLogin, login)
+router.post('/changeImage', validateImage, changeImage)
 
 //router.get('/logout', logout)
 
