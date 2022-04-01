@@ -7,11 +7,27 @@ const commentSchema = new Schema({
         type: String,
         required: true
     },
-    comment: {
+    text: {
         type: String,
         required: true
     },
+    owner: {
+        type: String,
+        required: true
+    },
+    imageUser: {
+        type: String,
+        required: true
+    },
+    registeredUserTimestamp: {
+        type: Number,
+        required: true
+    },
     createdTimestamp: {
+        type: Number,
+        required: true
+    },
+    commentsAmount: {
         type: Number,
         required: true
     }

@@ -46,10 +46,9 @@ module.exports = {
         } else {
             res.send({ success: false, message: 'Neteisingi duomenys' })
         }
-
+    },
+    logout: (req, res) => {
+        req.session.username = null
+        res.send({ success: true })
     }
-    // logout: (req, res) => {
-    //     req.session.user = null
-    //     res.send({ success: true })
-    // }
 }

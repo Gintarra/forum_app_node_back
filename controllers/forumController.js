@@ -1,4 +1,7 @@
 const topicsDb = require('../models/topicSchema')
+const commentsDb = require('../models/commentsSchema')
+const usersDb = require('../models/userSchema')
+const rowsCountPerPage = 10;
 
 
 module.exports = {
@@ -32,20 +35,60 @@ module.exports = {
     getMyTopics: async (req, res) => {
         const { username } = req.session;
         try {
-            const topics = await topicsDb.find({owner: username})
-            res.send({ success: true, data: topics });
+            const topics = await topicsDb.find({ owner: username })
+            const comments = await commentsDb.find({owner: username})
+            res.send({ success: true, data: topics, data2: comments });
         } catch (e) {
             return res.send({ success: false, message: 'Nerasta temų' })
         }
     },
     topicComments: async (req, res) => {
         const { username } = req.session;
-        const {id} = req.params;
+        const { id } = req.params;
         try {
-            const topics = await topicsDb.find({owner: username})
-            res.send({ success: true, data: topics });
+            const comments = await commentsDb.find({ topicID: id })
+            res.send({ success: true, data: comments });
         } catch (e) {
             return res.send({ success: false, message: 'Nerasta temų' })
+        }
+    },
+    commentsByPage: async (req, res) => {
+        const { username } = req.session;
+        const { id, pageIndex } = req.params;
+        let skipIndex = 0;
+        if (pageIndex > 1) {
+            skipIndex = (Number(pageIndex) - 1) * rowsCountPerPage;
+          }
+          const comments = await commentsDb.find({topicID: id}).skip(skipIndex).limit(rowsCountPerPage);
+          const allCommentsCount = await commentsDb.find({topicID: id}).count({});
+          res.send({
+            success: true,
+            data: comments,
+            data2: allCommentsCount
+          });
+    },
+    addComment: async (req, res) => {
+        const { username } = req.session;
+        const { id, text } = req.body;
+        const user = await usersDb.findOne({username: username})
+        if (username) {
+            const comment = new commentsDb();
+            comment.owner = username
+            comment.topicID = id
+            comment.text = text
+            comment.imageUser = user.image
+            comment.registeredUserTimestamp =user.registerTimestamp
+            comment.createdTimestamp = Date.now()
+            comment.commentsAmount = 0
+            comment.save()
+                .then(async () => {
+                    return res.send({ success: true, message: 'Komentaras sukurtas' });
+                })
+                .catch((e) => {
+                    return res.send({
+                        success: false, message: 'Nepavyko sukurti komentaro',
+                    });
+                });
         }
     }
 }

@@ -2,15 +2,18 @@ const express = require("express");
 const router = express.Router();
 
 
-const { register, login, changeImage}
+const { register, login, changeImage,
+logout}
     = require('../controllers/userController')
 
 const {createTopic, getAllTopics,
     getMyTopics,
-    topicComments} = require('../controllers/forumController')
+    topicComments,
+    commentsByPage,
+addComment} = require('../controllers/forumController')
 
 const {validateRegister, validateLogin, validateImage,
-validateTopic} = require('../middleware/main')
+validateTopic, validateComment} = require('../middleware/main')
 
 
 router.post('/register', validateRegister, register)
@@ -21,8 +24,10 @@ router.post('/createTopic', validateTopic, createTopic)
 router.get('/allTopics', getAllTopics)
 router.get('/myTopics', getMyTopics)
 
-router.get('/topic/:id', topicComments)
-//router.get('/logout', logout)
+router.get('/topic/:id/:pageIndex', commentsByPage)
+router.post('/comment', validateComment, addComment)
+
+router.get('/logout', logout)
 
 
 module.exports = router
