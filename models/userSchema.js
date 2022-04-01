@@ -22,6 +22,11 @@ const userSchema = new Schema({
     commentsAmount: {
         type: Number,
         required: true
+    },
+    notification: {
+        type: Number,
+        required: true,
+        default: 0
     }
 })
 

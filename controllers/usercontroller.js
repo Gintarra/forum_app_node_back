@@ -37,6 +37,15 @@ module.exports = {
             res.send({ success: false, message: 'Neteisingi duomenys' })
         }
     },
+    getUser:async (req, res) => {
+        const { username } = req.session
+        const userExist = await usersDb.findOne({ username: username })
+        if (userExist) {
+            return res.send({ success: true, data: userExist })
+        } else {
+            res.send({ success: false, message: 'Neteisingi duomenys' })
+        }
+    },
     changeImage: async (req, res) => {
         const { username } = req.session
         const { newImage, user } = req.body
