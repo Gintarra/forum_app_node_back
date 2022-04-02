@@ -24,9 +24,8 @@ const userSchema = new Schema({
         required: true
     },
     notification: {
-        type: Number,
-        required: true,
-        default: 0
+        type: Array,
+        required: false
     }
 })
 

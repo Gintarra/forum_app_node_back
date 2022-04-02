@@ -26,10 +26,6 @@ const commentSchema = new Schema({
     createdTimestamp: {
         type: Number,
         required: true
-    },
-    commentsAmount: {
-        type: Number,
-        required: true
     }
 })
 

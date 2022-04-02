@@ -14,6 +14,15 @@ const topicSchema = new Schema({
     createdTimestamp: {
         type: Number,
         required: true
+    },
+    commentsAmount: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    lastCommentBy: {
+        type: String,
+        required: false
     }
 })
 
