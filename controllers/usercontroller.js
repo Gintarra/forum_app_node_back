@@ -1,13 +1,9 @@
 const bcrypt = require('bcrypt')
 const usersDb = require('../models/userSchema')
 
-
-
-
-
 module.exports = {
     register: async (req, res) => {
-        const { username, pass1, pass2 } = req.body
+        const { username, pass1 } = req.body
         const hash = await bcrypt.hash(pass1, 10)
         const user = new usersDb()
         user.username = username
@@ -15,7 +11,6 @@ module.exports = {
         user.image = "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
         user.registerTimestamp = Date.now()
         user.commentsAmount = 0
-      //  user.notification = []
         user.save()
             .then(async () => {
                 return res.send({ success: true, message: 'Vartotojas įrašytas' });
@@ -30,7 +25,6 @@ module.exports = {
     login: async (req, res) => {
         const { username, password } = req.body
         const userExist = await usersDb.findOne({ username: username })
-        console.log(userExist)
         const compare = await bcrypt.compare(password, userExist.password)
         if (username === userExist.username && compare) {
             req.session.username = username

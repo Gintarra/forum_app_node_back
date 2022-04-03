@@ -17,7 +17,6 @@ module.exports = {
     },
     validateLogin: async (req, res, next) => {
         const { username, password } = req.body
-        console.log(username, "logine")
         const userExist = await usersDb.findOne({ username: username })
         if (!userExist) {
             res.send({ success: false, message: 'Neteisingi duomenys' })
@@ -27,8 +26,8 @@ module.exports = {
     },
     validateImage: (req, res, next) => {
         const { newImage } = req.body
-        if (newImage.length < 5 || newImage.length > 400) {
-            res.send({ success: false, message: "Netinkamas url." })
+        if (newImage.length < 5 || newImage.length > 100) {
+            res.send({ success: false, message: "Netinkamas url, ilgis turi būti 5-100 simbolių." })
         } else {
             next()
         }
@@ -43,8 +42,8 @@ module.exports = {
     },
     validateComment: (req, res, next) => {
         const { text } = req.body
-        if (text.length < 5 || text.length > 400) {
-            res.send({ success: false, message: "Netinkamas komentaras, ilgis turi būti 5-400 simbolių." })
+        if (text.length < 5 || text.length > 500) {
+            res.send({ success: false, message: "Netinkamas komentaras, ilgis turi būti 5-500 simbolių." })
         } else {
             next()
         }
