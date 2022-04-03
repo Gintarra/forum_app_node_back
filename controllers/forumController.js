@@ -66,13 +66,16 @@ module.exports = {
         const comments = await commentsDb.find({ topicID: id }).skip(skipIndex).limit(rowsCountPerPage);
 
         const topic = await topicsDb.findOne({ _id: id })
+        let search = null;
+        let filteredArray = []
+        if (username) {
+            let user = await usersDb.findOne({ username: username })
+            notificationArray = user.notification;
+            search = notificationArray.find(x => x == id)
+            filteredArray = notificationArray.filter(x => x != id)
+        }
 
-        let user = await usersDb.findOne({ username: username })
-        notificationArray = user.notification;
-        //   console.log(notificationArray, "notif", topic._id)
-        const search = notificationArray.find(x => x == id)
-        const filteredArray = notificationArray.filter(x => x != id)
-        //  console.log(search, "search")
+
 
         if (username && search) {
             const topicOwner = await usersDb.updateOne({ username: username }, { $set: { notification: filteredArray } })
@@ -94,11 +97,11 @@ module.exports = {
         //console.log(user)
         const topic = await topicsDb.findOne({ _id: id })
         const topicOwnerUser = await usersDb.findOne({ username: topic.owner })
-       if(topicOwnerUser){
-           notificationArray = topicOwnerUser.notification;
-       } else {
-        notificationArray = []
-       }
+        if (topicOwnerUser) {
+            notificationArray = topicOwnerUser.notification;
+        } else {
+            notificationArray = []
+        }
         console.log(notificationArray, "id ", id)
         const search = notificationArray.find(x => x == id)
         console.log(search, "rez")
