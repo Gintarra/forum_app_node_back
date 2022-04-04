@@ -32,7 +32,10 @@ app.use(
     secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: {
+      sameSite: 'none',
+      secure: true
+    },
   })
 );
 

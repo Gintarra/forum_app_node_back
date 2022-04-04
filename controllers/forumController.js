@@ -71,7 +71,8 @@ module.exports = {
             success: true,
             data: comments,
             data2: allCommentsCount,
-            data3: user
+            data3: user,
+            data4: topic.title
         });
     },
     addComment: async (req, res) => {
