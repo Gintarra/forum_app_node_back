@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const usersDb = require('../models/userSchema')
+const commentsDb = require('../models/commentsSchema')
 
 module.exports = {
     register: async (req, res) => {
@@ -47,6 +48,7 @@ module.exports = {
         const { newImage, user } = req.body
         if (username) {
             const newUserData = await usersDb.findOneAndUpdate({ username: user }, { image: newImage }, { new: true })
+            const updateCom = await commentsDb.updateMany({owner: username}, {imageUser: newImage})
             return res.send({ success: true, data: newUserData })
         } else {
             res.send({ success: false, message: 'Neteisingi duomenys' })

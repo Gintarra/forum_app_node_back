@@ -5,6 +5,16 @@ const session = require("express-session");
 require("dotenv").config();
 
 
+
+const http = require('http').createServer(app)
+
+const io = require('socket.io')(http, {
+    cors: {
+        origin: 'http://localhost:3000'
+    }
+})
+
+
 app.use((req, res, next) => {
   // Website you wish to allow to connect
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -25,7 +35,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-app.listen(4000);
+http.listen(4000);
 
 app.use(
   session({
@@ -33,8 +43,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      sameSite: 'none',
-      secure: true
+      secure: false
     },
   })
 );
@@ -49,7 +58,7 @@ mongoose
   });
 
 
-
+  app.set('socketio', io)
 
 
 const router = require("./routes/main");

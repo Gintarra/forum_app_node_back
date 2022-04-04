@@ -14,7 +14,8 @@ const { createTopic,
     getMyTopics,
     commentsByPage,
     addComment,
-    getFavorites } = require('../controllers/forumController')
+    getFavorites,
+    decreaseNotification } = require('../controllers/forumController')
 
 const { validateRegister,
     validateLogin,
@@ -36,6 +37,7 @@ router.get('/myTopics', getMyTopics)
 router.post('/favorites', getFavorites)
 router.get('/topic/:id/:pageIndex', commentsByPage)
 router.post('/comment', validateComment, addComment)
+router.post('/decrease', decreaseNotification)
 
 
 module.exports = router

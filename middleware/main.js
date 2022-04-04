@@ -26,8 +26,8 @@ module.exports = {
     },
     validateImage: (req, res, next) => {
         const { newImage } = req.body
-        if (newImage.length < 5 || newImage.length > 100) {
-            res.send({ success: false, message: "Netinkamas url, ilgis turi būti 5-100 simbolių." })
+        if (newImage.length < 5 || newImage.length > 200) {
+            res.send({ success: false, message: "Netinkamas url, ilgis turi būti 5-200 simbolių." })
         } else {
             next()
         }

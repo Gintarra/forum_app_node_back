@@ -76,8 +76,15 @@ module.exports = {
         });
     },
     addComment: async (req, res) => {
+        const io = req.app.get('socketio');
         const { username } = req.session;
-        const { id, text } = req.body;
+        const { id, text, pageIndex } = req.body;
+
+        let skipIndex = 0;
+        if (pageIndex > 1) {
+            skipIndex = (Number(pageIndex) - 1) * rowsCountPerPage;
+        }
+
         const user = await usersDb.findOne({ username: username })
         const topic = await topicsDb.findOne({ _id: id })
         const topicOwnerUser = await usersDb.findOne({ username: topic.owner })
@@ -97,6 +104,7 @@ module.exports = {
             }
             const updateTopic = await topicsDb.findOneAndUpdate({ _id: id }, { $set: { lastCommentBy: username }, $inc: { commentsAmount: 1 } })
 
+
             const comment = new commentsDb();
             comment.owner = username
             comment.topicID = id
@@ -106,6 +114,10 @@ module.exports = {
             comment.createdTimestamp = Date.now()
             comment.save()
                 .then(async () => {
+                    const comments = await commentsDb.find({ topicID: id }).skip(skipIndex).limit(rowsCountPerPage);
+                    const allCommentsCount = await commentsDb.find({ topicID: id }).count({});
+                    const dataAll = [comments, allCommentsCount, id]
+                    io.emit("realTimeComment", dataAll);
                     return res.send({ success: true, message: 'Komentaras sukurtas' });
                 })
                 .catch((e) => {
@@ -123,5 +135,23 @@ module.exports = {
         } catch (e) {
             return res.send({ success: false, message: 'Nerasta temų' })
         }
+    },
+    decreaseNotification: async (req, res) => {
+        const { username } = req.session;
+        const { id } = req.body;
+        console.log(username, " ", id)
+
+        let search = null;
+        let filteredArray = []
+        if (username) {
+            let user = await usersDb.findOne({ username: username })
+            notificationArray = user.notification;
+            search = notificationArray.find(x => x == id)
+            filteredArray = notificationArray.filter(x => x != id)
+        }
+        if (username && search) {
+            const topicOwner = await usersDb.updateOne({ username: username }, { $set: { notification: filteredArray } })
+        }
+        res.send({ success: true});
     }
 }

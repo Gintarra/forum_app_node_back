@@ -17,6 +17,7 @@
     "express-session": "^1.17.2",
     "mongoose": "^6.2.0",
     "nodemon": "^2.0.15",
-    "random-id": "^1.0.4"
+    "random-id": "^1.0.4",
+    "socket.io": "^4.4.1"
   }
 }
