@@ -4,7 +4,7 @@ module.exports = {
     validateRegister: async (req, res, next) => {
         const { username, pass1, pass2 } = req.body;
         const userExist = await usersDb.findOne({ username: username })
-        if (pass1 !== pass2 || pass1.length < 5 || pass2.length > 20 || pass1.length < 3 || pass1.length > 20) {
+        if (pass1 !== pass2 || pass1.length < 5 || pass1.length > 20 || pass2.length < 5 || pass2.length > 20) {
             res.send({ error: "Slaptažodis turi būti 5-20 simbolių, sutapti." })
         }
         else if (username.length < 5 || username.length > 20) {

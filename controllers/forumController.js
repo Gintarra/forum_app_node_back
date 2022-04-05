@@ -138,18 +138,14 @@ module.exports = {
     },
     decreaseNotification: async (req, res) => {
         const { username } = req.session;
-        const { id } = req.body;
-        console.log(username, " ", id)
+        const { id, location } = req.body;
+        const path = '/tema/' + id
 
-        let search = null;
         let filteredArray = []
-        if (username) {
+        if (username && location.pathname === path ) {
             let user = await usersDb.findOne({ username: username })
             notificationArray = user.notification;
-            search = notificationArray.find(x => x == id)
             filteredArray = notificationArray.filter(x => x != id)
-        }
-        if (username && search) {
             const topicOwner = await usersDb.updateOne({ username: username }, { $set: { notification: filteredArray } })
         }
         res.send({ success: true});
